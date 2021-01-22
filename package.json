@@ -12,7 +12,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main",
+    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -44,6 +44,7 @@
     "eslint": "^7.12.1",
     "eslint-config-prettier": "7.1.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.8",
     "jest": "^26.6.3",
     "prettier": "^2.1.2",
     "supertest": "^6.0.0",
@@ -70,5 +71,11 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test && npm run test:e2e"
+    }
   }
 }
