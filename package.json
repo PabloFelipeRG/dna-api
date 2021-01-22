@@ -1,7 +1,7 @@
 {
   "name": "meli-dna-api",
   "version": "1.0.0",
-  "description": "This API analyze a DNA to see if it is from a simian or human.",
+  "description": "This API analyzes a DNA to see if it is from a simian or human.",
   "author": "Pablo Goncalves<pablo.feliperios@gmail.com>",
   "private": true,
   "license": "UNLICENSED",
@@ -24,9 +24,11 @@
     "@nestjs/common": "^7.5.1",
     "@nestjs/core": "^7.5.1",
     "@nestjs/platform-express": "^7.5.1",
+    "@nestjs/swagger": "^4.7.12",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.6.3",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.5.1",

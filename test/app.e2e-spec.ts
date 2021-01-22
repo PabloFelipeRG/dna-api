@@ -15,10 +15,23 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/simian (POST)', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .post('/simian')
+      .send({
+        dna: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAGGG', 'CCCCTA', 'TCACTG'],
+      })
+      .set('Accept', 'application/json')
+      .expect(200);
+  });
+
+  it('/simian (POST error)', () => {
+    return request(app.getHttpServer())
+      .post('/simian')
+      .send({
+        dna: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAGGG', 'CCCGTA', 'TCACTG'],
+      })
+      .set('Accept', 'application/json')
+      .expect(403);
   });
 });

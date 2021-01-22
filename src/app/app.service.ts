@@ -2,26 +2,19 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
-
-  public isSimian(dna: string[]) {
+  public isSimian(dna: string[]): boolean {
     const matrix = dna.map((nitrogenousBase) =>
       nitrogenousBase.toUpperCase().split(''),
     );
     let totalSequences = 0;
 
     totalSequences += this.getHorizontalSequence(matrix);
-    console.log(totalSequences);
     if (totalSequences >= 2) return true;
 
     totalSequences += this.getVerticalSequence(matrix);
-    console.log(totalSequences);
     if (totalSequences >= 2) return true;
 
     totalSequences += this.getDiagonalSequence(matrix);
-    console.log(totalSequences);
     if (totalSequences >= 2) return true;
 
     return false;
@@ -103,12 +96,12 @@ export class AppService {
       });
     };
 
-    hasSequence(this.verifyDiagonalSequence(matrix));
-    hasSequence(this.verifyAntiDiagonalSequence(matrix));
+    hasSequence(this.getAllDiagonals(matrix));
+    hasSequence(this.getAllAntiDiagonals(matrix));
     return diagonalSequences;
   }
 
-  private verifyDiagonalSequence(matrix: string[][]): string[][] {
+  private getAllDiagonals(matrix: string[][]): string[][] {
     const totalRows = matrix.length;
     const totalCols = matrix[0].length;
     const result = [];
@@ -148,7 +141,7 @@ export class AppService {
     return result;
   }
 
-  private verifyAntiDiagonalSequence(matrix: string[][]): string[][] {
+  private getAllAntiDiagonals(matrix: string[][]): string[][] {
     const totalRows = matrix.length;
     const totalCols = matrix[0].length;
     const result = [];
