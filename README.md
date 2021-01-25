@@ -4,7 +4,7 @@
 
 ## Links
 
-- API URL - https://meli-dna-api.herokuapp.com/
+- API URL - https://meli-dna-api.herokuapp.com
 - [Swagger documentation with test features](https://meli-dna-api.herokuapp.com/api)
 
 ## Requirements
