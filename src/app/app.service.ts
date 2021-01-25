@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { DNA_MODEL } from '../common/constants/database.constants';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Dna } from 'src/providers/dna/dna.interface';
 
 @Injectable()

@@ -1,1 +1,2 @@
 export const HTTP_OK_RESPONSE_CODE = 200;
+export const VALID_NITROGENOUS_BASE_CHARS = 'ATCG';
