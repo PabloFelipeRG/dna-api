@@ -1,5 +1,6 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DNA_MODEL } from '../../common/constants/database.constants';
 import { AppController } from '../app.controller';
 import { AppService } from '../app.service';
 import { DnaDto } from '../dto/dna.dto';
@@ -11,7 +12,20 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        AppService,
+        {
+          provide: DNA_MODEL,
+          useValue: {
+            create() {
+              return;
+            },
+            findOne() {
+              return;
+            },
+          },
+        },
+      ],
     }).compile();
 
     appController = app.get<AppController>(AppController);

@@ -1,23 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { Model } from 'mongoose';
+import { DNA_MODEL } from '../common/constants/database.constants';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Dna } from 'src/providers/dna/dna.interface';
 
 @Injectable()
 export class AppService {
+  constructor(@Inject(DNA_MODEL) private readonly dnaModel: Model<Dna>) {}
+
   public isSimian(dna: string[]): boolean {
     const matrix = dna.map((nitrogenousBase) =>
       nitrogenousBase.toUpperCase().split(''),
     );
+
+    const positiveResult = () => {
+      this.insertDna(dna, true);
+      return true;
+    };
+
+    const negativeResult = () => {
+      this.insertDna(dna, false);
+      return false;
+    };
+
+    if (matrix.length <= 3) {
+      return negativeResult();
+    }
+
     let totalSequences = 0;
 
     totalSequences += this.getHorizontalSequence(matrix);
-    if (totalSequences >= 2) return true;
+    if (totalSequences >= 2) return positiveResult();
 
     totalSequences += this.getVerticalSequence(matrix);
-    if (totalSequences >= 2) return true;
+    if (totalSequences >= 2) return positiveResult();
 
     totalSequences += this.getDiagonalSequence(matrix);
-    if (totalSequences >= 2) return true;
+    if (totalSequences >= 2) return positiveResult();
 
-    return false;
+    return negativeResult();
+  }
+
+  private async insertDna(
+    dna: string[],
+    isSimian: boolean,
+  ): Promise<void | HttpException> {
+    try {
+      const newDna = {
+        dna,
+        isSimian,
+      } as Dna;
+
+      const dnaAlreadySaved = await this.dnaModel.findOne(newDna);
+      if (!dnaAlreadySaved) await this.dnaModel.create(newDna);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   private getHorizontalSequence(matrix: string[][]): number {

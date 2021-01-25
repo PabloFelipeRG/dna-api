@@ -1,14 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppService } from '../app.service';
+import { DNA_MODEL } from '../../common/constants/database.constants';
+import { Model } from 'mongoose';
+import { Dna } from '../../providers/dna/dna.interface';
 
 describe('AppService', () => {
   let appService: AppService;
+  let model: Model<Dna>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      providers: [AppService],
+      providers: [
+        AppService,
+        {
+          provide: DNA_MODEL,
+          useValue: {
+            create() {
+              return;
+            },
+            findOne() {
+              return;
+            },
+          },
+        },
+      ],
     }).compile();
 
+    model = app.get<Model<Dna>>(DNA_MODEL);
     appService = app.get<AppService>(AppService);
   });
 
@@ -272,6 +290,35 @@ describe('AppService', () => {
     it('should return true for validSimianDnaWithThreeSequences', () => {
       const result = appService.isSimian(validSimianDnaWithThreeSequences);
       expect(result).toBe(true);
+    });
+  });
+
+  describe('insertDna', () => {
+    const dna = ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAGGG', 'CCCCTA', 'TCACTG'];
+
+    const dnaMock = {
+      dna,
+      isSimian: true,
+    } as Dna;
+
+    it('should not create a new dna if it exists', async () => {
+      const findOneSpy = jest
+        .spyOn(model, 'findOne')
+        .mockResolvedValue(dnaMock);
+      const createSpy = jest.spyOn(model, 'create');
+
+      await appService['insertDna'](dna, true);
+      expect(findOneSpy).toHaveBeenCalledWith(dnaMock);
+      expect(createSpy).not.toHaveBeenCalled();
+    });
+
+    it('should create a new dna if it not exists', async () => {
+      const findOneSpy = jest.spyOn(model, 'findOne').mockResolvedValue(null);
+      const createSpy = jest.spyOn(model, 'create');
+
+      await appService['insertDna'](dna, true);
+      expect(findOneSpy).toHaveBeenCalledWith(dnaMock);
+      expect(createSpy).toHaveBeenCalledWith(dnaMock);
     });
   });
 });
