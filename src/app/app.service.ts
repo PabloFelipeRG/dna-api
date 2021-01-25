@@ -46,6 +46,28 @@ export class AppService {
     return negativeResult();
   }
 
+  public async getStats() {
+    const dnas = await this.dnaModel.find();
+
+    return dnas.reduce(
+      (totalCount: any, dna: Dna) => {
+        if (dna.isSimian) totalCount.count_mutant_dna++;
+        else totalCount.count_human_dna++;
+
+        totalCount.ratio = parseFloat(
+          (totalCount.count_mutant_dna / totalCount.count_human_dna).toFixed(1),
+        );
+
+        return totalCount;
+      },
+      {
+        count_mutant_dna: 0,
+        count_human_dna: 0,
+        ratio: 0,
+      },
+    );
+  }
+
   private async insertDna(
     dna: string[],
     isSimian: boolean,

@@ -23,6 +23,9 @@ describe('AppController', () => {
             findOne() {
               return;
             },
+            find() {
+              return;
+            },
           },
         },
       ],
@@ -59,6 +62,19 @@ describe('AppController', () => {
         ForbiddenException,
       );
       expect(appService.isSimian).toHaveBeenCalledWith(invalidSimianDnaDto.dna);
+    });
+  });
+
+  describe('getStats', () => {
+    it('should return the dnas stats', async () => {
+      jest.spyOn(appService, 'getStats').mockResolvedValue({
+        count_mutant_dna: 0,
+        count_human_dna: 0,
+        ratio: 0,
+      });
+
+      await appController.getStats();
+      expect(appService.getStats).toHaveBeenCalled();
     });
   });
 });

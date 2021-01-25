@@ -21,6 +21,9 @@ describe('AppService', () => {
             findOne() {
               return;
             },
+            find() {
+              return;
+            },
           },
         },
       ],
@@ -319,6 +322,29 @@ describe('AppService', () => {
       await appService['insertDna'](dna, true);
       expect(findOneSpy).toHaveBeenCalledWith(dnaMock);
       expect(createSpy).toHaveBeenCalledWith(dnaMock);
+    });
+  });
+
+  describe('getStats', () => {
+    it('should calculate and return the correct registered dnas stats', async () => {
+      jest.spyOn(model, 'find').mockResolvedValue([
+        {
+          isSimian: true,
+        } as Dna,
+        {
+          isSimian: true,
+        } as Dna,
+        {
+          isSimian: false,
+        } as Dna,
+      ]);
+
+      const result = await appService.getStats();
+      expect(result).toStrictEqual({
+        count_human_dna: 1,
+        count_mutant_dna: 2,
+        ratio: 2.0,
+      });
     });
   });
 });
